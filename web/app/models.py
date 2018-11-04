@@ -12,7 +12,8 @@ class Alarm(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.VARCHAR)
-    datetime = db.Column(db.DateTime)
+    hour = db.Column(db.Integer)
+    minute = db.Column(db.Integer)
     weekdays = db.Column(db.VARCHAR)
     duration = db.Column(db.Integer)
     sunrise_id = db.Column(db.Integer, db.ForeignKey('sunrisetype.id'))

@@ -6,31 +6,80 @@
     * proper styling, 
     * all fields that are also in the database,
     * modal dialogs for OK/FAIL -->
+
+<div>
+{% for a in alarms %}
+    <form id="form-{{ a.name }}">
+        <input type="hidden" name="id" value="{{a.id}}">
+
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" value="{{ a.name }}">
+
+        <label for="timetext">Time</label>
+        <input type="text" id="timetext" name="timetext" value="{{ "%02d" % a.hour }}:{{ "%02d" % a.minute }}">
+
+        <label for="sunrise_id">Sunrise</label>
+        <select id="sunrise_id" name="sunrise_id">
+            <!-- TODO: populate sunrise-types from db -->
+            <option value="0">Sumatra</option>
+            <option value="1">Test</option>
+        </select>
+
+        <label for="sound_id">Sound</label>
+        <select id="sound_id" name="sound_id">
+            <!-- TODO: populate sounds from db -->
+            <option value="0">Beach</option>
+            <option value="1">Test</option>
+        </select>
+
+        <label for="duration">Duration</label>
+        <input type="text" id="duration" name="duration" value="{{a.duration}}">
+        <!-- {{ a.name }} - {{ a.hour }}:{{ a.minute}}, {{ a.weekdays }}, {{ a.duration }}<br /> -->
+        <label for="weekdays">Weekdays</label>
+        <fieldset id="weekdays" name="weekdays">
+            <label><input type="checkbox" name="weekday" value="Mon">Mon</label>
+            <label><input type="checkbox" name="weekday" value="Tue">Tue</label>
+            <label><input type="checkbox" name="weekday" value="Wed">Wed</label>
+            <label><input type="checkbox" name="weekday" value="Thu">Thu</label>
+            <label><input type="checkbox" name="weekday" value="Fri">Fri</label>
+            <label><input type="checkbox" name="weekday" value="Sat">Sat</label>
+            <label><input type="checkbox" name="weekday" value="Sun">Sun</label>
+        </fieldset>
+        <input type="submit" id="savebutton-{{a.name}}">
+    </form>
+
+
+    <script type="text/javascript">
+    $(function(){
+        $('#savebutton-{{a.name}}').click(function(){
+            $.ajax({
+                url: '/updatealarm',
+                data: $('#form-{{a.name}}').serialize(),
+                type: 'POST',
+                success: function(response){
+                        console.log(response);
+                },
+                error: function(error){
+                        console.log(error);
+                }
+            });
+            event.preventDefault();
+        });
+    });
+
+
+    $('#timetext').timepicker();
+    </script>
+
+{% endfor %}
+
+</div>
+
+<!--
 <form>
 <input type="text" id="timetext" name="timetext">
 <input type="submit" id="savebutton">
 </form>
-
-<script type="text/javascript">
-$(function(){
-    $('#savebutton').click(function(){
-        $.ajax({
-            url: '/savetime',
-            data: $('form').serialize(),
-            type: 'POST',
-            success: function(response){
-                    console.log(response);
-            },
-            error: function(error){
-                    console.log(error);
-            }
-        });
-        event.preventDefault();
-    });
-});
-
-
-$('#timetext').timepicker();
-</script>
+-->
 
 {% endblock %}
