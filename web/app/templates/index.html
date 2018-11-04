@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Alarm clock</h1>
+
+<!-- TODO: 
+    * proper styling, 
+    * all fields that are also in the database,
+    * modal dialogs for OK/FAIL -->
+<form>
+<input type="text" id="timetext" name="timetext">
+<input type="submit" id="savebutton">
+</form>
+
+<script type="text/javascript">
+$(function(){
+    $('#savebutton').click(function(){
+        $.ajax({
+            url: '/savetime',
+            data: $('form').serialize(),
+            type: 'POST',
+            success: function(response){
+                    console.log(response);
+            },
+            error: function(error){
+                    console.log(error);
+            }
+        });
+        event.preventDefault();
+    });
+});
+
+
+$('#timetext').timepicker();
+</script>
+
+{% endblock %}
