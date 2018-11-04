@@ -9,44 +9,52 @@
 
 <div>
 {% for a in alarms %}
-    <form id="form-{{ a.name }}">
-        <input type="hidden" name="id" value="{{a.id}}">
 
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" value="{{ a.name }}">
+    <div style="background-color:#333;border-bottom:1px solid black;">
+        <div style="cursor:pointer;width:100%;padding:5 10 5 10;" onclick="$('#{{a.name}}').toggle();">
+            {{a.name}} - {{a.hour}}:{{a.minute}}
+        </div> 
+        <div style="display:none;padding:5px;" id="{{a.name}}">
+            <form id="form-{{ a.name }}">
+                <input type="hidden" name="id" value="{{a.id}}">
 
-        <label for="timetext">Time</label>
-        <input type="text" id="timetext" name="timetext" value="{{ "%02d" % a.hour }}:{{ "%02d" % a.minute }}">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" value="{{ a.name }}">
 
-        <label for="sunrise_id">Sunrise</label>
-        <select id="sunrise_id" name="sunrise_id">
-            <!-- TODO: populate sunrise-types from db -->
-            <option value="0">Sumatra</option>
-            <option value="1">Test</option>
-        </select>
+                <label for="timetext">Time</label>
+                <input type="text" id="timetext-{{a.name}}" name="timetext" value="{{ "%02d" % a.hour }}:{{ "%02d" % a.minute }}">
 
-        <label for="sound_id">Sound</label>
-        <select id="sound_id" name="sound_id">
-            <!-- TODO: populate sounds from db -->
-            <option value="0">Beach</option>
-            <option value="1">Test</option>
-        </select>
+                <label for="sunrise_id">Sunrise</label>
+                <select id="sunrise_id" name="sunrise_id">
+                    <!-- TODO: populate sunrise-types from db -->
+                    <option value="0">Sumatra</option>
+                    <option value="1">Test</option>
+                </select>
 
-        <label for="duration">Duration</label>
-        <input type="text" id="duration" name="duration" value="{{a.duration}}">
-        <!-- {{ a.name }} - {{ a.hour }}:{{ a.minute}}, {{ a.weekdays }}, {{ a.duration }}<br /> -->
-        <label for="weekdays">Weekdays</label>
-        <fieldset id="weekdays" name="weekdays">
-            <label><input type="checkbox" name="weekday" value="Mon">Mon</label>
-            <label><input type="checkbox" name="weekday" value="Tue">Tue</label>
-            <label><input type="checkbox" name="weekday" value="Wed">Wed</label>
-            <label><input type="checkbox" name="weekday" value="Thu">Thu</label>
-            <label><input type="checkbox" name="weekday" value="Fri">Fri</label>
-            <label><input type="checkbox" name="weekday" value="Sat">Sat</label>
-            <label><input type="checkbox" name="weekday" value="Sun">Sun</label>
-        </fieldset>
-        <input type="submit" id="savebutton-{{a.name}}">
-    </form>
+                <label for="sound_id">Sound</label>
+                <select id="sound_id" name="sound_id">
+                    <!-- TODO: populate sounds from db -->
+                    <option value="0">Beach</option>
+                    <option value="1">Test</option>
+                </select>
+
+                <label for="duration">Duration</label>
+                <input type="text" id="duration" name="duration" value="{{a.duration}}">
+                <!-- {{ a.name }} - {{ a.hour }}:{{ a.minute}}, {{ a.weekdays }}, {{ a.duration }}<br /> -->
+                <label for="weekdays">Weekdays</label>
+                <fieldset id="weekdays" name="weekdays">
+                    <label><input type="checkbox" name="weekday" value="Mon">Mon</label>
+                    <label><input type="checkbox" name="weekday" value="Tue">Tue</label>
+                    <label><input type="checkbox" name="weekday" value="Wed">Wed</label>
+                    <label><input type="checkbox" name="weekday" value="Thu">Thu</label>
+                    <label><input type="checkbox" name="weekday" value="Fri">Fri</label>
+                    <label><input type="checkbox" name="weekday" value="Sat">Sat</label>
+                    <label><input type="checkbox" name="weekday" value="Sun">Sun</label>
+                </fieldset>
+                <input type="submit" id="savebutton-{{a.name}}">
+            </form>
+        </div>
+    </div>
 
 
     <script type="text/javascript">
@@ -58,6 +66,7 @@
                 type: 'POST',
                 success: function(response){
                         console.log(response);
+                        location.reload();
                 },
                 error: function(error){
                         console.log(error);
@@ -68,10 +77,78 @@
     });
 
 
-    $('#timetext').timepicker();
+    $('#timetext-{{a.name}}').timepicker();
     </script>
 
 {% endfor %}
+
+    <div style="background-color:#333">
+        <div style="cursor:pointer;width:100%;padding:5px;" onclick="$('#addnew').toggle();">
+            + Add new 
+        </div> 
+        <div style="display:none;padding:5px;" id="addnew">
+            <form id="form-addnew">
+                <input type="hidden" name="id" value="-1">
+
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" value="">
+
+                <label for="timetext">Time</label>
+                <input type="text" id="timetext-addnew" name="timetext" value="{{ "%02d" % 0 }}:{{ "%02d" % 0 }}">
+
+                <label for="sunrise_id">Sunrise</label>
+                <select id="sunrise_id" name="sunrise_id">
+                    <!-- TODO: populate sunrise-types from db -->
+                    <option value="0">Sumatra</option>
+                    <option value="1">Test</option>
+                </select>
+
+                <label for="sound_id">Sound</label>
+                <select id="sound_id" name="sound_id">
+                    <!-- TODO: populate sounds from db -->
+                    <option value="0">Beach</option>
+                    <option value="1">Test</option>
+                </select>
+
+                <label for="duration">Duration</label>
+                <input type="text" id="duration" name="duration" value="30">
+
+                <label for="weekdays">Weekdays</label>
+                <fieldset id="weekdays" name="weekdays">
+                    <label><input type="checkbox" name="weekday" value="Mon">Mon</label>
+                    <label><input type="checkbox" name="weekday" value="Tue">Tue</label>
+                    <label><input type="checkbox" name="weekday" value="Wed">Wed</label>
+                    <label><input type="checkbox" name="weekday" value="Thu">Thu</label>
+                    <label><input type="checkbox" name="weekday" value="Fri">Fri</label>
+                    <label><input type="checkbox" name="weekday" value="Sat">Sat</label>
+                    <label><input type="checkbox" name="weekday" value="Sun">Sun</label>
+                </fieldset>
+                <input type="submit" id="savebutton-addnew">
+            </form>
+        </div>
+
+    <script type="text/javascript">
+    $(function(){
+        $('#savebutton-addnew').click(function(){
+            $.ajax({
+                url: '/createalarm',
+                data: $('#form-addnew').serialize(),
+                type: 'POST',
+                success: function(response){
+                        console.log(response);
+                        location.reload();
+                },
+                error: function(error){
+                        console.log(error);
+                }
+            });
+            event.preventDefault();
+        });
+    });
+
+
+    $('#timetext-addnew').timepicker();
+    </script>
 
 </div>
 

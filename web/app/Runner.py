@@ -6,6 +6,7 @@ author: Tobias Weis
 import multiprocessing
 import time
 import datetime
+from pygame import mixer
 
 class Runner(multiprocessing.Process):
     def __init__(self, config, md, alarms, models,db):
@@ -40,8 +41,10 @@ class Runner(multiprocessing.Process):
         for a in self.alarms:
             if a.hour == now.hour and a.minute == now.minute:
                 print "ALARM - ALARM - ALARM - ALARM"
-                # TODO play sound and tune leds
-                # move to it's own function!
+                mixer.init()
+                mixer.music.load()
+                mixer.music.play()
+
 
         print "[Runner]."
 

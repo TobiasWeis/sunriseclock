@@ -48,3 +48,41 @@ def updatealarm():
 
     return json.dumps({'status':'OK'})
 
+
+@app.route('/createalarm', methods=['POST'])
+def createalarm():
+    """
+    create a NEW alarm
+    """
+    try:
+        name = request.form["name"]
+        hour = request.form["timetext"].split(":")[0]
+        minute = request.form["timetext"].split(":")[1]
+        # TODO
+        #a.weekdays = ...
+        duration = request.form["duration"]
+        sunrise_id = request.form["sunrise_id"]
+        sound_id = request.form["sound_id"]
+
+        a = models.Alarm(
+                name=name,
+                hour=hour,
+                minute=minute,
+                weekdays=-1,
+                duration=duration,
+                sunrise_id=sunrise_id,
+                sound_id=sound_id
+                        )
+
+        db.session.add(a)
+        db.session.commit()
+
+        # now we need to update the runner's alarms
+        md["alarms"] = models.Alarm.query.all()
+        md["update_alarms"] = True
+    except Exception, e:
+        print "EXCEPTION: ", e
+        return json.dumps({'status':'FAIL'})
+
+    return json.dumps({'status':'OK'})
+
