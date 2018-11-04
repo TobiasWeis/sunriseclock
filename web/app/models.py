@@ -1,4 +1,8 @@
-from app import db
+try:
+    from app import db
+except:
+    from flask_sqlalchemy import SQLAlchemy
+    db = SQLAlchemy()
 
 class Alarm(db.Model):
     def __init__(self, name, hour, minute, weekdays, duration, sunrise_id, sound_id):
@@ -20,6 +24,7 @@ class Alarm(db.Model):
     sound_id = db.Column(db.Integer, db.ForeignKey('sound.id'))
 
     def __repr__(self):
+        return '<Alarm %r (%s): %02d:%02d>' % (self.id, self.name, self.hour, self.minute)
         return '<Alarm %r>' % self.id
 
 class Sound(db.Model):

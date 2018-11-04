@@ -10,6 +10,8 @@ def index():
     Serve the website
     """
     alarms = models.Alarm.query.all()
+    sounds = models.Sound.query.all()
+    sunrises = models.Sunrisetype.query.all()
 
     print "[views.py]: ", alarms
 
@@ -29,6 +31,7 @@ def updatealarm():
         a.name = request.form["name"]
         a.hour = request.form["timetext"].split(":")[0]
         a.minute = request.form["timetext"].split(":")[1]
+        # TODO
         #a.weekdays = ...
         a.duration = request.form["duration"]
         a.sunrise_id = request.form["sunrise_id"]
@@ -37,7 +40,7 @@ def updatealarm():
         db.session.commit()
 
         # now we need to update the runner's alarms
-        #md["update_alarms"] = models.Alarm.query.all()
+        md["alarms"] = models.Alarm.query.all()
         md["update_alarms"] = True
     except Exception, e:
         print "EXCEPTION: ", e

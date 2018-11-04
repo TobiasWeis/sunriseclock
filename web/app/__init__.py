@@ -8,8 +8,6 @@ md = Manager.dict()
 md['shutdown'] = False
 md['update_alarms'] = False
 
-#from models import *
-
 app = Flask(__name__)
 app.jinja_env.cache = {}
 app.config.from_pyfile('config.py')
@@ -41,7 +39,6 @@ except:
     db.session.add(sa)
     db.session.commit()
 
-
 # start the background-runner that will handle the alarms
-runner = Runner(app.config, md, models.Alarm.query.all(), models)
+runner = Runner(app.config, md, models.Alarm.query.all(), models, db)
 runner.start()
