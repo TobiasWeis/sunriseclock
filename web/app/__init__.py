@@ -1,5 +1,12 @@
 from flask import Flask
 import os
+from multiprocessing import Process, Manager
+from Runner import *
+
+Manager = Manager()
+md = Manager.dict()
+md['shutdown'] = False
+
 #from models import *
 
 app = Flask(__name__)
@@ -9,8 +16,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['CACHE_TYPE'] = "null"
 app.secret_key = 'supersecretkey'
 app.config['SESSION_TYPE'] = 'filesystem'
-
-
+app.md = md
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -36,3 +42,6 @@ if not os.path.isfile(app.config['SQLALCHEMY_DATABASE_URI']):
         db.session.commit()
 
 
+# start the background-runner that will handle the alarms
+runner = Runner(app.config, md, models.Alarm.query.all())
+runner.start()
