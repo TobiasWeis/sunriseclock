@@ -1,0 +1,5 @@
+To get usb-soundcard to work:
+create file /etc/modprobe.d/alsa-base.conf with the following content:
+options snd-usb-audio index=0
+
+( note that the internal sound of the RPi is disabled b/c it would interfer with the LEDs)
