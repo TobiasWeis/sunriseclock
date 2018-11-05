@@ -38,12 +38,17 @@ class Runner(multiprocessing.Process):
         # TODO: implement day-check
         now = datetime.datetime.now()
 
+        # TODO: handle overlapping alarms (a sunrise-sequence is quite long!)
         for a in self.alarms:
             if a.hour == now.hour and a.minute == now.minute:
                 print "ALARM - ALARM - ALARM - ALARM"
                 mixer.init()
-                mixer.music.load()
+                mixer.music.load("app/assets/beachwaves_44Xum7sIEoI.mp3")
                 mixer.music.play()
+                # playing is non-blocking, think about how to handle this
+                while mixer.music.get_busy():
+                    print "[Runner] busy playing.."
+                    time.sleep(5)
 
 
         print "[Runner]."
