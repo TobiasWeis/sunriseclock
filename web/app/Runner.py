@@ -8,6 +8,8 @@ import time
 import datetime
 from pygame import mixer
 
+from SunriseController import *
+
 class Runner(multiprocessing.Process):
     def __init__(self, config, md, alarms, models,db):
         multiprocessing.Process.__init__(self)
@@ -15,6 +17,8 @@ class Runner(multiprocessing.Process):
         self.md = md
         self.models = models
         self.db = db
+
+        self.sc = SunriseController()
 
         self.alarms = alarms
 
@@ -46,13 +50,13 @@ class Runner(multiprocessing.Process):
                 mixer.music.load("app/assets/beachwaves_44Xum7sIEoI.mp3")
                 mixer.music.play()
                 # playing is non-blocking, think about how to handle this
-                while mixer.music.get_busy():
-                    print "[Runner] busy playing.."
-                    time.sleep(5)
-
+                self.sc.sunrise(a.duration)
+                mixer.music.stop()
+                self.sc.cleanup()
 
         print "[Runner]."
 
     def cleanup(self):
+        self.sc.cleanup()
         print "Runner cleaning up"
 

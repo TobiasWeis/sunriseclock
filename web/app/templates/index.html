@@ -26,16 +26,24 @@
 
                 <label for="sunrise_id">Sunrise</label>
                 <select id="sunrise_id" name="sunrise_id">
-                    <!-- TODO: populate sunrise-types from db -->
-                    <option value="0">Sumatra</option>
-                    <option value="1">Test</option>
+                    {% for s in sunrises %}
+                        {% if s.id == a.sunrise_id %}
+                            <option value="{{s.id}}" selected>{{s.name}}</option>
+                        {% else %}
+                            <option value="{{s.id}}">{{s.name}}</option>
+                        {% endif %}
+                    {% endfor %}
                 </select>
 
                 <label for="sound_id">Sound</label>
                 <select id="sound_id" name="sound_id">
-                    <!-- TODO: populate sounds from db -->
-                    <option value="0">Beach</option>
-                    <option value="1">Test</option>
+                    {% for s in sounds %}
+                        {% if s.id == a.sound_id %}
+                            <option value="{{s.id}}" selected>{{s.name}}</option>
+                        {% else %}
+                            <option value="{{s.id}}">{{s.name}}</option>
+                        {% endif %}
+                    {% endfor %}
                 </select>
 
                 <label for="duration">Duration</label>

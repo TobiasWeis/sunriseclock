@@ -33,7 +33,13 @@ except:
     # add sample alarm
     s = models.Sound("First sound", "/tmp/test.mp3")
     db.session.add(s)
+    s = models.Sound("Second sound", "/tmp/test2.mp3")
+    db.session.add(s)
     st = models.Sunrisetype("Normal")
+    db.session.add(st)
+    st = models.Sunrisetype("Beach")
+    db.session.add(st)
+    st = models.Sunrisetype("Jungle")
     db.session.add(st)
     sa = models.Alarm("SampleAlarm", hour=9, minute=0, weekdays=-1, duration=30, sunrise_id=0, sound_id=0)
     db.session.add(sa)

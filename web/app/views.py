@@ -15,7 +15,7 @@ def index():
 
     print "[views.py]: ", alarms
 
-    return render_template('index.html', title='Home', alarms=alarms)
+    return render_template('index.html', title='Home', alarms=alarms, sounds=sounds, sunrises=sunrises)
 
 @app.route('/updatealarm', methods=['POST'])
 def updatealarm():
