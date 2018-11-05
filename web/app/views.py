@@ -48,6 +48,22 @@ def updatealarm():
 
     return json.dumps({'status':'OK'})
 
+@app.route('/deletealarm', methods=['Post'])
+def deletealarm():
+    """
+    delete alarm completely from database
+    """
+    try:
+        delid = request.form["id"]
+        a = models.Alarm.query.filter_by(id=delid).first()
+        db.session.delete(a)
+        db.session.commit()
+    except Exception, e:
+        print "[views.py] EXCEPTION: ", e
+        return json.dumps({'status':'FAIL'})
+
+    return json.dumps({'status':'OK'})
+
 
 @app.route('/createalarm', methods=['POST'])
 def createalarm():

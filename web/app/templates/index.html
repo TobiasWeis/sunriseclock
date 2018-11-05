@@ -51,7 +51,8 @@
                     <label><input type="checkbox" name="weekday" value="Sat">Sat</label>
                     <label><input type="checkbox" name="weekday" value="Sun">Sun</label>
                 </fieldset>
-                <input type="submit" id="savebutton-{{a.name}}">
+                <input type="submit" id="savebutton-{{a.name}}" value="Save" class="save">
+                <input type="submit" id="deletebutton-{{a.name}}" value="Delete" class="delete">
             </form>
         </div>
     </div>
@@ -75,6 +76,25 @@
             event.preventDefault();
         });
     });
+
+    $(function(){
+        $('#deletebutton-{{a.name}}').click(function(){
+            $.ajax({
+                url: '/deletealarm',
+                data: $('#form-{{a.name}}').serialize(),
+                type: 'POST',
+                success: function(response){
+                        console.log(response);
+                        location.reload();
+                },
+                error: function(error){
+                        console.log(error);
+                }
+            });
+            event.preventDefault();
+        });
+    });
+
 
 
     $('#timetext-{{a.name}}').timepicker();
@@ -123,7 +143,7 @@
                     <label><input type="checkbox" name="weekday" value="Sat">Sat</label>
                     <label><input type="checkbox" name="weekday" value="Sun">Sun</label>
                 </fieldset>
-                <input type="submit" id="savebutton-addnew">
+                <input type="submit" id="savebutton-addnew" value="Save">
             </form>
         </div>
 
