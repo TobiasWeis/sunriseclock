@@ -15,7 +15,7 @@ class SunriseController:
     def __init__(self):
         # LED strip configuration:
         #LED_COUNT      = 300      # Number of LED pixels.
-        LED_COUNT      = 5      # Number of LED pixels.
+        LED_COUNT      = 14*20      # Number of LED pixels.
         LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
         #LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
         LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
@@ -28,6 +28,42 @@ class SunriseController:
         self.strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
         # Intialize the library (must be called once before other functions).
         self.strip.begin()
+
+
+    def set(strip,x,y,col,numcols=20, numrows=14):
+        """
+        calculate the serial coordinate from x/y coordinates
+        """
+        if y % 2 == 1:
+            strip.setPixelColor(y*numcols+(numcols-1-x), Color(col[1],col[0],col[2]))
+        else:
+            strip.setPixelColor(y*numcols+x, Color(col[1],col[0],col[2]))
+
+    def loadimage(strip, img, numcols=20, numrows=14):
+        img = cv2.imread(img)
+        nimg = cv2.resize(img, (numcols,numrows))
+        nimg = cv2.cvtColor(nimg, cv2.COLOR_BGR2RGB)
+
+        """
+        img = np.zeros((14,20,3), np.uint8)
+        img[:,:,0] = 255
+        img[:,5:10,1] = 255
+        img[5:10,:,2] = 255
+        """
+
+        #darken all colors
+        nimg = nimg/4
+
+        for x in range(nimg.shape[1]):
+            for y in range(nimg.shape[0]):
+                set(strip,x,nimg.shape[0]-y,nimg[y,x])
+        print("DONE")
+
+        strip.show()
+
+        time.sleep(20)
+
+        clear(strip)
 
 
     def cleanup(self):
@@ -79,17 +115,17 @@ class SunriseController:
         ])
 
         colors = (colors*255).astype(np.uint8)
-        numcols = 1
-        numrows = 5 
+        numcols = 20
+        numrows = 14
 
         numsteps = len(colors)-numrows
         stepduration = (duration*60)/numsteps
 
         for step in range(numsteps):
-            for y in range(numrows):
-                for x in range(numcols):
-                    col = colors[len(colors)-1-y-step]
-                    self.strip.setPixelColor(x*numrows+y, Color(col[1],col[0],col[2]))
+            for x in range(numrows):
+                col = colors[len(colors)-1-x-step]
+                for i in range(numcols):
+                    self.strip.setPixelColor(x*numcols+i, Color(col[1],col[0],col[2]))
             self.strip.show()
             time.sleep(stepduration)
 
